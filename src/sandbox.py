@@ -1,4 +1,4 @@
-from htmlnode import HTMLNode
+from htmlnode import HTMLNode, LeafNode
 
 # Sanity Check 1: Default attributes
 node1 = HTMLNode()  # Everything should default
@@ -12,3 +12,8 @@ print(node2.props_to_html())
 # Sanity Check 3: Just props
 node3 = HTMLNode(props={"id": "unique"})
 print(node3.props_to_html())
+
+# Sanity Check 4: no children left in LeafNode
+node4 = LeafNode(tag="span", value="example text")
+print(node4)
+

@@ -22,3 +22,19 @@ class HTMLNode():
                 f"value={self.value or 'None'}, "
                 f"{len(self.children) if self.children else 0} children, "
                 f"{len(self.props) if self.props else 0} props")  # useful for debugging later
+    
+class LeafNode(HTMLNode):
+    def __init__(self, tag, value, props=None):
+        super().__init__(tag, value, children=None, props=props)
+
+    def add_child(self, child):
+        raise ValueError("LeafNode cannot have children")
+
+    def to_html(self):
+        if self.value is None:
+            raise ValueError("Leaf node must have a value")
+        if self.tag is None:
+            return self.value
+
+        props_html = self.props_to_html()
+        return f'<{self.tag}{props_html}>{self.value}</{self.tag}>'
