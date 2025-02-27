@@ -25,16 +25,48 @@ class HTMLNode():
     
 class LeafNode(HTMLNode):
     def __init__(self, tag, value, props=None):
+        if value is None:
+            raise ValueError("Leaf node must have a value")
+
         super().__init__(tag, value, children=None, props=props)
+        self.tag = tag
+        self.value = value
 
     def add_child(self, child):
         raise ValueError("LeafNode cannot have children")
 
     def to_html(self):
-        if self.value is None:
-            raise ValueError("Leaf node must have a value")
         if self.tag is None:
             return self.value
-
         props_html = self.props_to_html()
         return f'<{self.tag}{props_html}>{self.value}</{self.tag}>'
+
+class ParentNode(HTMLNode):
+    def __init__(self, tag, children, props=None):
+        if tag is None:
+            raise ValueError("Parent node must have a tag")
+        if not children:
+            raise ValueError("Parent node must have children")
+
+        super().__init__(tag, children, props=props)
+        self.value = None
+        self.children = children
+        self.tag = tag
+
+
+    def to_html(self):          
+        # See below for previous code and debugging process
+        return f"<{self.tag}>{''.join(child.to_html() for child in self.children)}</{self.tag}>"
+        # DEBUGGING: print(f"Processing ParentNode with tag {self.tag} and children: {self.children}")
+        
+        # DEBUGGING: children_html = ""   # code prior to the one-line code below
+        # DEBUGGING: for child in self.children:
+        # DEBUGGING:     print(f"Calling to_html on child: {child}")
+        # DEBUGGING:     child_html = child.to_html()
+        # DEBUGGING:     print(f"Generated HTML from child: {child_html}")
+        # DEBUGGING:     children_html += child_html
+
+        # DEBUGGING: children_html = "".join(child.to_html() for child in self.children)
+
+        # DEBUGGING: return f"<{self.tag}>{children_html}</{self.tag}>"
+        
