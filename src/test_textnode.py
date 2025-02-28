@@ -1,8 +1,10 @@
 import unittest
 
-from textnode import TextNode, TextType
+from textnode import TextNode, TextType, text_node_to_html_node
+from htmlnode import LeafNode
 
 class TestTextNode(unittest.TestCase):
+    """Start initial TestTextNode tests============================================================="""
     def test_eq(self):
         node = TextNode("This is a text node", TextType.BOLD)
         node2 = TextNode("This is a text node", TextType.BOLD)
@@ -31,7 +33,51 @@ class TestTextNode(unittest.TestCase):
         url = "https://example.com"
         node = TextNode("Link text", TextType.LINK, url)
         self.assertEqual(node.url, url)
-        
+
+    """Start tests for TextNode to HTMLNode======================================================"""
+    def test_text(self):
+        node = TextNode("This is a text node", TextType.TEXT)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, None)
+        self.assertEqual(html_node.value, "This is a text node")
+
+    def test_bold(self):
+        node = TextNode("stupid text here", TextType.BOLD)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, "b")
+        self.assertEqual(html_node.value, "stupid text here")
+
+    def test_italic(self):
+        node = TextNode("more random text", TextType.ITALIC)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, "i")
+        self.assertEqual(html_node.value, "more random text")
+
+    def test_code(self):
+        node = TextNode("more random text", TextType.CODE)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, "code")
+        self.assertEqual(html_node.value, "more random text")
+
+    
+    def test_image(self):
+        node = TextNode("alt image text here", TextType.IMAGE, "https://example.com/image.jpg")
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, "img")
+        self.assertEqual(html_node.value, "")
+        self.assertIn("src", html_node.props)
+        self.assertEqual(html_node.props["src"], "https://example.com/image.jpg")
+        self.assertIn("alt", html_node.props)
+        self.assertEqual(html_node.props["alt"], "alt image text here")
+
+    def test_link(self):
+        node = TextNode("more random text", TextType.LINK, "https://example.com")
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, "a")
+        self.assertEqual(html_node.value, "more random text")
+        self.assertIn("href", html_node.props)
+        self.assertEqual(html_node.props["href"], "https://example.com")
+                
 
 if __name__ == "__main__":
     unittest.main()
