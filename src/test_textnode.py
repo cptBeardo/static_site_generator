@@ -2,6 +2,7 @@ import unittest
 
 from textnode import TextNode, TextType, text_node_to_html_node
 from htmlnode import LeafNode
+from splitnode import split_nodes_delimiter, find_delimiter_indices
 
 class TestTextNode(unittest.TestCase):
     """Start initial TestTextNode tests============================================================="""
@@ -35,32 +36,32 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(node.url, url)
 
     """Start tests for TextNode to HTMLNode======================================================"""
-    def test_text(self):
+    def test_text_node_text(self):
         node = TextNode("This is a text node", TextType.TEXT)
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, None)
         self.assertEqual(html_node.value, "This is a text node")
 
-    def test_bold(self):
+    def test_text_node_bold(self):
         node = TextNode("stupid text here", TextType.BOLD)
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, "b")
         self.assertEqual(html_node.value, "stupid text here")
 
-    def test_italic(self):
+    def test_text_node_italic(self):
         node = TextNode("more random text", TextType.ITALIC)
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, "i")
         self.assertEqual(html_node.value, "more random text")
 
-    def test_code(self):
+    def test_text_node_code(self):
         node = TextNode("more random text", TextType.CODE)
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, "code")
         self.assertEqual(html_node.value, "more random text")
 
     
-    def test_image(self):
+    def test_text_node_image(self):
         node = TextNode("alt image text here", TextType.IMAGE, "https://example.com/image.jpg")
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, "img")
@@ -70,14 +71,77 @@ class TestTextNode(unittest.TestCase):
         self.assertIn("alt", html_node.props)
         self.assertEqual(html_node.props["alt"], "alt image text here")
 
-    def test_link(self):
+    def test_text_node_link(self):
         node = TextNode("more random text", TextType.LINK, "https://example.com")
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, "a")
         self.assertEqual(html_node.value, "more random text")
         self.assertIn("href", html_node.props)
         self.assertEqual(html_node.props["href"], "https://example.com")
-                
+
+
+    """Start tests for splitnode.py===================================================================    """       
+    def test_bold(self):
+        old_nodes = [
+            TextNode("This is text with a **bold word** in it", TextType.TEXT),
+            TextNode("This is already bold", TextType.BOLD)
+        ]
+        new_nodes = split_nodes_delimiter(old_nodes, "**", TextType.BOLD)
+
+        # remember to assert expectations:
+        self.assertEqual(len(new_nodes), 4)
+        self.assertEqual(new_nodes[0].text, "This is text with a ")
+        self.assertEqual(new_nodes[0].text_type, TextType.TEXT)
+        self.assertEqual(new_nodes[1].text, "bold word")
+        self.assertEqual(new_nodes[1].text_type, TextType.BOLD)
+        self.assertEqual(new_nodes[2].text, " in it")
+        self.assertEqual(new_nodes[2].text_type, TextType.TEXT)
+        self.assertEqual(new_nodes[3].text, "This is already bold")
+        self.assertEqual(new_nodes[3].text_type, TextType.BOLD)
+
+    def test_italic(self):
+        old_nodes = [
+            TextNode("This is text with an _italic word_ in it", TextType.TEXT),
+            TextNode("This is already italic", TextType.ITALIC)
+        ]
+        new_nodes = split_nodes_delimiter(old_nodes, "_", TextType.ITALIC)
+
+        self.assertEqual(len(new_nodes), 4)
+        self.assertEqual(new_nodes[0].text, "This is text with an ")
+        self.assertEqual(new_nodes[0].text_type, TextType.TEXT)
+        self.assertEqual(new_nodes[1].text, "italic word")
+        self.assertEqual(new_nodes[1].text_type, TextType.ITALIC)
+        self.assertEqual(new_nodes[2].text, " in it")
+        self.assertEqual(new_nodes[2].text_type, TextType.TEXT)
+        self.assertEqual(new_nodes[3].text, "This is already italic")
+        self.assertEqual(new_nodes[3].text_type, TextType.ITALIC)
+        
+    def test_code(self):
+        old_nodes = [
+            TextNode("This is text with a `code word` in it", TextType.TEXT),
+            TextNode("This is already code", TextType.CODE)
+        ]
+        new_nodes = split_nodes_delimiter(old_nodes, "`", TextType.CODE)
+
+        # remember to assert expectations:
+        self.assertEqual(len(new_nodes), 4)
+        self.assertEqual(new_nodes[0].text, "This is text with a ")
+        self.assertEqual(new_nodes[0].text_type, TextType.TEXT)
+        self.assertEqual(new_nodes[1].text, "code word")
+        self.assertEqual(new_nodes[1].text_type, TextType.CODE)
+        self.assertEqual(new_nodes[2].text, " in it")
+        self.assertEqual(new_nodes[2].text_type, TextType.TEXT)
+        self.assertEqual(new_nodes[3].text, "This is already code")
+        self.assertEqual(new_nodes[3].text_type, TextType.CODE)
+
+    def test_non_found(self):
+        old_nodes = [
+            TextNode("This is text with a _italic word_ in it", TextType.TEXT),
+            TextNode("This is already bold", TextType.BOLD),
+        ]
+        new_nodes = split_nodes_delimiter(old_nodes, "-", TextType.IMAGE)
+
+        self.assertNotEqual(len(new_nodes), 4)
 
 if __name__ == "__main__":
     unittest.main()
