@@ -1,8 +1,9 @@
 import unittest
+import re
 
 from textnode import TextNode, TextType, text_node_to_html_node
 from htmlnode import LeafNode
-from splitnode import split_nodes_delimiter, find_delimiter_indices
+from splitnode import *
 
 class TestTextNode(unittest.TestCase):
     """Start initial TestTextNode tests============================================================="""
@@ -142,6 +143,26 @@ class TestTextNode(unittest.TestCase):
         new_nodes = split_nodes_delimiter(old_nodes, "-", TextType.IMAGE)
 
         self.assertNotEqual(len(new_nodes), 4)
+
+
+    """Start tests for image and link extraction========================================================================"""
+    def test_extract_markdown_images(self):
+        matches = extract_markdown_images(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)"
+        )
+        self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png")], matches)
+
+    def test_extract_markdown_links(self):
+        matches2 = extract_markdown_links(
+            "This is text with a [link to a random site](https://i.imgur.com/zjjcJKZ.png)"
+        )
+        self.assertListEqual([("link to a random site", "https://i.imgur.com/zjjcJKZ.png")], matches2)
+
+    def test_extract_markdown_links_not_equal(self):
+        matches3 = extract_markdown_images(
+            "This is text with a [link to a random site](https://i.imgur.com/zjjcJKZ.png)"
+        )
+        self.assertNotEqual("link to a random site", "https://i.imgur.com/zjjcJKZ.png")
 
 if __name__ == "__main__":
     unittest.main()

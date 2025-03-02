@@ -1,6 +1,8 @@
 import sys
 from textnode import TextNode, TextType
 
+"""navigate to ../public and run python3 -m http.server 8888"""
+
 #  print("# hello world")  # only used to test that ./main.sh was working properly
 
 def main():

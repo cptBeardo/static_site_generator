@@ -1,3 +1,4 @@
+import re
 from htmlnode import *
 from textnode import *
 from splitnode import *
@@ -38,19 +39,27 @@ from main import *
 # DEBUGGING: print(split_nodes_delimiter.new_nodes)
 
 # Create a sample old_nodes list
-old_nodes = [
-    TextNode("This is text with a **bold word** in it", TextType.TEXT),
-    TextNode("This is already bold", TextType.BOLD)
-]
+# DEBUGGING: old_nodes = [
+# DEBUGGING:     TextNode("This is text with a **bold word** in it", TextType.TEXT),
+# DEBUGGING:     TextNode("This is already bold", TextType.BOLD)
+# DEBUGGING: ]
 
 # Print out the old_nodes to see their structure
-print("Old Nodes:")
-for node in old_nodes:
-    print(f"Text: '{node.text}', Type: {node.text_type}")
+# DEBUGGING: print("Old Nodes:")
+# DEBUGGING: for node in old_nodes:
+# DEBUGGING:     print(f"Text: '{node.text}', Type: {node.text_type}")
 
 # Let's imagine how split_nodes_delimiter would work with "**" delimiter
-print("\nIf we split with '**' delimiter for BOLD type, we would get:")
-print("1. TextNode('This is text with a ', TEXT)")
-print("2. TextNode('bold word', BOLD)")
-print("3. TextNode(' in it', TEXT)")
-print("4. TextNode('This is already bold', BOLD) - unchanged because it's not TEXT type")
+# DEBUGGING: print("\nIf we split with '**' delimiter for BOLD type, we would get:")
+# DEBUGGING: print("1. TextNode('This is text with a ', TEXT)")
+# DEBUGGING: print("2. TextNode('bold word', BOLD)")
+# DEBUGGING: print("3. TextNode(' in it', TEXT)")
+# DEBUGGING: print("4. TextNode('This is already bold', BOLD) - unchanged because it's not TEXT type")
+
+test = "This is my website [Cameron Sager Music](https://cmmusic.com), and this is my reference [john smith](http://johnsmithmusic.com)"
+matches = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", test)
+print(matches)
+
+test2 = "This is the image I want to use ![Empty Image](https://../static_site_generator/srd/empty_image.jpg)"
+new_matches = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", test2)
+print(new_matches)

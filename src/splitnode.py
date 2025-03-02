@@ -1,3 +1,4 @@
+import re
 from textnode import TextNode, TextType
 from htmlnode import HTMLNode, LeafNode
 
@@ -26,18 +27,14 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
         after_text = text[end_index + len(delimiter):]
         if after_text:
-            new_nodes.append(TextNode(after_text, TextType.TEXT))
-        
-    
+            new_nodes.append(TextNode(after_text, TextType.TEXT))  
     return new_nodes
-
 
 def find_delimiter_indices(text, delimiter):
     """
     Find the indices of the first pair of delimiters in the text.
     Returns (start_index, end_index) or raises an exception if no pair is found.
     """
-
     start_index = text.find(delimiter)
     if start_index == -1:
         return None, None  # no starting delimiter found
@@ -47,3 +44,15 @@ def find_delimiter_indices(text, delimiter):
         raise Exception(f"No closing delimiter found for {delimiter}")
 
     return start_index, end_index
+
+def extract_markdown_links(text):
+    """    find the [anchor text] and (url) in the text string    """
+    links_matches = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+    return links_matches
+    
+    
+def extract_markdown_images(text):
+    """    find the ![alt text] and (url) in the text string    """
+    images_matches = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
+    return images_matches
+    
