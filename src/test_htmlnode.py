@@ -1,4 +1,5 @@
 import pytest  # Only needed for these specific tests
+import re
 from htmlnode import HTMLNode, LeafNode, ParentNode
 
 """Start tests for HTMLNode ====================================================================================="""

@@ -164,5 +164,101 @@ class TestTextNode(unittest.TestCase):
         )
         self.assertNotEqual("link to a random site", "https://i.imgur.com/zjjcJKZ.png")
 
+    """Start tests for splitting images and links======================================================================"""
+    def test_split_images(self):
+        node = TextNode(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with an ", TextType.TEXT),
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" and another ", TextType.TEXT),
+                TextNode(
+                    "second image", TextType.IMAGE, "https://i.imgur.com/3elNhQu.png"
+                ),
+            ],
+            new_nodes,
+        )
+
+    def test_split_links(self):
+        node = TextNode(
+            "This is text with [a link to my website](https://cameronsmusic.com).",
+            TextType.TEXT,
+        )
+        new_nodes = split_nodes_link([node])
+        self.assertListEqual(
+            [
+                TextNode("This is text with ", TextType.TEXT),
+                TextNode("a link to my website", TextType.LINK, "https://cameronsmusic.com"),
+                TextNode(".", TextType.TEXT),
+            ],
+            new_nodes,
+        )
+    
+    def test_links_not_split(self):
+        node = TextNode(
+            "This text doesn't contain any [images] and doesn't have any (image urls), but does contain a [link](https://falsepositive.com) to a fake site", 
+            TextType.TEXT
+        )
+        new_nodes = split_nodes_link([node])
+        self.assertNotEqual(
+            [
+                TextNode("This text doesn't contain any ", TextType.TEXT),
+                TextNode("images", TextType.LINK, " and doesn't have any (image urls)"),
+                TextNode(", but does contain a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://falsepositive.com"),
+                TextNode(" to a fake site", TextType.TEXT),
+            ],
+            new_nodes,
+        )
+
+    def test_links_not_image(self):
+        node = TextNode(
+            "This text contains a ![link](https://badlink.com) that is improperly formatted as an image",
+            TextType.TEXT
+        )
+        new_nodes = split_nodes_link([node])
+        self.assertEqual(
+            [
+                TextNode("This text contains a ![link](https://badlink.com) that is improperly formatted as an image", TextType.TEXT)
+            ],
+            new_nodes,
+        )
+
+    def test_only_image(self):
+        node = TextNode(
+            "This text contains both an ![image](https://..src/image.jpg) and a [link](https://cameronsmusic.com), but I only want the image",
+            TextType.TEXT
+        )
+        new_nodes = split_nodes_image([node])
+        self.assertListEqual(
+            [
+                TextNode("This text contains both an ", TextType.TEXT),
+                TextNode("image", TextType.IMAGE, "https://..src/image.jpg"),
+                TextNode(" and a [link](https://cameronsmusic.com), but I only want the image", TextType.TEXT),
+            ],
+            new_nodes,
+        )
+
+    def test_only_link(self):
+        node = TextNode(
+            "This text contains both an ![image](https://..src/image.jpg) and a [link](https://cameronsmusic.com), but I only want the link",
+            TextType.TEXT
+        )
+        new_nodes = split_nodes_link([node])
+        self.assertListEqual(
+            [
+                TextNode("This text contains both an ![image](https://..src/image.jpg) and a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://cameronsmusic.com"),
+                TextNode(", but I only want the link", TextType.TEXT),
+            ],
+            new_nodes
+        )
+
+
+
 if __name__ == "__main__":
     unittest.main()
