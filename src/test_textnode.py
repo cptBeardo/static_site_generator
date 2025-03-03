@@ -258,7 +258,41 @@ class TestTextNode(unittest.TestCase):
             new_nodes
         )
 
+    """Start tests for processing text to textnodes=============================================================================="""
+    def test_text_to_textnodes(self):
+        test_node = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        new_nodes = text_to_textnodes(test_node)
+        self.assertListEqual(
+            [
+                TextNode("This is ", TextType.TEXT),
+                TextNode("text", TextType.BOLD),
+                TextNode(" with an ", TextType.TEXT),
+                TextNode("italic", TextType.ITALIC),
+                TextNode(" word and a ", TextType.TEXT),
+                TextNode("code block", TextType.CODE),
+                TextNode(" and an ", TextType.TEXT),
+                TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+                TextNode(" and a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://boot.dev"),
+            ],
+            new_nodes
+        )
 
+    def test_text_to_textnodes2(self):
+        test_node = "I have placed **bold** text inside an _image_ object here ![**picture**](https://i.imgur.com/fJRm4Vk.jpeg)."
+        new_nodes = text_to_textnodes(test_node)
+        self.assertListEqual(
+            [
+                TextNode("I have placed ", TextType.TEXT),
+                TextNode("bold", TextType.BOLD),
+                TextNode(" text inside an ", TextType.TEXT),
+                TextNode("image", TextType.ITALIC),
+                TextNode(" object here ", TextType.TEXT),
+                TextNode("**picture**", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+                TextNode(".", TextType.TEXT),
+            ],
+            new_nodes
+        )
 
 if __name__ == "__main__":
     unittest.main()
