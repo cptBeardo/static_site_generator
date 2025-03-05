@@ -56,15 +56,16 @@ from main import *
 # DEBUGGING: print("3. TextNode(' in it', TEXT)")
 # DEBUGGING: print("4. TextNode('This is already bold', BOLD) - unchanged because it's not TEXT type")
 
-test = "This is my website [Cameron Sager Music](https://cmmusic.com), and this is my reference [john smith](http://johnsmithmusic.com)"
-matches = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", test)
-print(matches)
-print(len(matches[1][0]))
-for match in matches:
-    for item in match:
-        print(len(item), test.find(item) - 1)
+# DEBUGGING: test = "This is my website [Cameron Sager Music](https://cmmusic.com), and this is my reference [john smith](http://johnsmithmusic.com)"
+# DEBUGGING: matches = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", test)
+# DEBUGGING: print(matches)
+# DEBUGGING: print(len(matches[1][0]))
+# DEBUGGING: for match in matches:
+# DEBUGGING:     for item in match:
+# DEBUGGING:         print(len(item), test.find(item) - 1)
 
-test2 = "This is the image I want to use ![Empty Image](https://../static_site_generator/srd/empty_image.jpg)"
-new_matches = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", test2)
-print(new_matches)
-print(len(new_matches[0][0]))
+# DEBUGGING: test2 = "This is the image I want to use ![Empty Image](https://../static_site_generator/srd/empty_image.jpg)"
+# DEBUGGING: new_matches = re.findall(r"!\[([^\[\]]*)\]\(([^\(\)]*)\)", test2)
+# DEBUGGING: print(new_matches)
+# DEBUGGING: print(len(new_matches[0][0]))
+
