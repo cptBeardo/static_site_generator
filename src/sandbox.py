@@ -1,6 +1,7 @@
 import os
 import re
 import posixpath
+import shutil
 
 from htmlnode import *
 from textnode import *
@@ -76,20 +77,30 @@ from main import *
 # TESTING posixpath commands: print(os.path.basename("/home/cmsager/workspace/github.com/cptBeardo/static_site_generator/src/sandbox.py"))
 # TESTING posixpath commands: print(os.path.abspath("sandbox.py")) # returns full path of file or directory"""
 # TESTING posixpath commands: print(os.path.exists("/public/"))
-print(os.path.exists("../public/")) # USE THIS ONE
-print(os.path.abspath(".")) # USE THIS ONE => Returns the full parent directory path to current file (does NOT return current file itself)
-current_directory = os.path.abspath(".")
-print(os.path.splitroot(current_directory))
-public_directory = os.path.abspath("../public")
-print(os.listdir(public_directory))
-static_directory = os.path.abspath("../static")
-print(os.listdir(static_directory))
-static_image_directory = os.path.abspath("../static/images")
-print(os.listdir(static_image_directory))
-print(if os.path.exists(current_directory))
+# TESTING posixpath commands: print(os.path.exists("../public/")) # USE THIS ONE
+# TESTING posixpath commands: print(os.path.abspath(".")) # USE THIS ONE => Returns the full parent directory path to current file (does NOT return current file itself)
+# TESTING posixpath commands: current_directory = os.path.abspath(".")
+# TESTING posixpath commands: print(os.path.splitroot(current_directory))
+# TESTING posixpath commands: public_false_directory = os.path.join("../", "public_false")
+# TESTING posixpath commands: print(os.path.exists(public_false_directory))
+# TESTING posixpath commands: static_directory = os.path.abspath("../static")
+# TESTING posixpath commands: print(os.listdir(static_directory))
+# TESTING posixpath commands: static_image_directory = os.path.abspath("../static/images")
+# TESTING posixpath commands: print(os.listdir(static_image_directory))
+
+root_directory = os.path.abspath("./")
+#static_directory = os.path.join(root_directory, "static")
+#print(os.listdir(static_directory))
+
+#static_files = os.listdir(static_directory)
+#print(static_files)
+
+print(root_directory)
 
 
 
+
+        
 
 
 
