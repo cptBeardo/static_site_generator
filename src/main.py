@@ -3,7 +3,7 @@ import os
 import posixpath
 import shutil
 from textnode import TextNode, TextType
-from markdownblock import markdown_to_blocks
+from markdownblock import markdown_to_blocks, markdown_to_html_node
 
 """navigate to ../public and run python3 -m http.server 8888"""
 
@@ -13,6 +13,15 @@ root_directory = os.path.dirname(script_dir)
 public_directory = os.path.join(root_directory,"public")
 static_directory = os.path.join(root_directory, "static")
 static_image_directory = os.path.join(static_directory, "images")
+
+def generate_page(from_path, template_path, dest_path):
+    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+    with open(from_path, 'r') as md_file:
+        md_content = md_file.read()
+    with open(template_path, 'r') as template_file:
+        template_content = template_file.read()
+    html_string = markdown_to_html_node(md_content).to_html()
+    doc_title = extract_title(md_content)
 
 def create_dir(directory: str):
     target_directory = os.path.exists(directory)
