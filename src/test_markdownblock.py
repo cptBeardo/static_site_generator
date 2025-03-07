@@ -1,7 +1,8 @@
 import unittest
+import os
 import re
 from markdownblock import markdown_to_blocks, block_to_block_type, BlockType, markdown_to_html_node
-from main import extract_title
+from main import *
 
 """27 tests complted"""
 class TestMarkdownBlock(unittest.TestCase):
@@ -114,7 +115,7 @@ class TestMarkdownToHTML(unittest.TestCase):
         actual_html = html_node.to_html()
         expected_html = """<div><blockquote><p>This is a blockquote</p><p>It can span multiple lines</p><p>And can contain <b>formatting</b></p></blockquote></div>"""
         self.assertEqual(actual_html, expected_html)
-        print(actual_html)
+        #print(actual_html)
 
     def test_unordered_list(self):
         markdown_input = """* Item 1\n* Item 2 with **bold**\n* Item 3 with *italic*"""
@@ -136,7 +137,7 @@ class TestMarkdownToHTML(unittest.TestCase):
         actual_html = html_node.to_html()
         expected_html = """<div><h1>Document Title</h1><p>This is a paragraph with <b>bold</b> and <i>italic</i> text.</p><h2>Section 1</h2><ul><li>List item 1</li><li>List item 2</li></ul><blockquote><p>Important quote here</p><p>With multiple lines</p></blockquote></div>"""
         self.assertEqual(actual_html, expected_html)
-        print(actual_html)
+        #print(actual_html)
 
 """44 tests completed"""
 class TestExtractTitle(unittest.TestCase):
@@ -166,6 +167,38 @@ class TestExtractTitle(unittest.TestCase):
         self.assertEqual(extract_title(markdown), "This is a heading")
 
 """49 tests completed"""
+class TestPullingMarkdownText(unittest.TestCase):
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    root_directory = os.path.dirname(script_dir)
+    file_to_test = os.path.join(root_directory, "content/test.md")
+    #print(script_dir)
+    #print(root_directory)
+    #print(file_to_test)
+
+    def test_tolkien_quote_only(self):
+        md_input = """> "I am in fact a Hobbit in all but size."\n>\n> -- J.R.R. Tolkien"""
+        html_node = markdown_to_html_node(md_input)
+        actual_html = html_node.to_html()
+        expected_html = """<div><blockquote><p>"I am in fact a Hobbit in all but size."</p><p></p><p>-- J.R.R. Tolkien</p></blockquote></div>"""
+        self.assertEqual(actual_html, expected_html)
+        #print(actual_html)
+
+    def test_tolkien_quote_context(self):
+        md_input = """# Tolkien Fan Club\n\n![JRR Tolkien sitting](/images/tolkien.png)\n\nHere's the deal, **I like Tolkien**.\n\n> "I am in fact a Hobbit in all but size."\n>\n> -- J.R.R. Tolkien\n\n## Blog posts\n\n- [Why Glorfindel is More Impressive than Legolas](/blog/glorfindel)\n- [Why Tom Bombadil Was a Mistake](/blog/tom)\n- [The Unparalleled Majesty of "The Lord of the Rings"](/blog/majesty)"""
+        html_node = markdown_to_html_node(md_input)
+        actual_html = html_node.to_html()
+        expected_html = """<div><h1>Tolkien Fan Club</h1><p><img src="/images/tolkien.png" alt="JRR Tolkien sitting"></img></p><p>Here's the deal, <b>I like Tolkien</b>.</p><blockquote><p>"I am in fact a Hobbit in all but size."</p><p></p><p>-- J.R.R. Tolkien</p></blockquote><h2>Blog posts</h2><ul><li><a href="/blog/glorfindel">Why Glorfindel is More Impressive than Legolas</a></li><li><a href="/blog/tom">Why Tom Bombadil Was a Mistake</a></li><li><a href="/blog/majesty">The Unparalleled Majesty of "The Lord of the Rings"</a></li></ul></div>"""
+        #print(actual_html)
+        self.assertEqual(actual_html, expected_html)
+
+    def test_tolkien_from_index_md(self):
+        with open(self.file_to_test, 'r') as tolkien_file:
+            md_input = tolkien_file.read()
+        html_node = markdown_to_html_node(md_input)
+        actual_html = html_node.to_html()
+        expected_html = """<div><h1>Tolkien Fan Club</h1><p><img src="/images/tolkien.png" alt="JRR Tolkien sitting"></img></p><p>Here's the deal, <b>I like Tolkien</b>.</p><blockquote><p>"I am in fact a Hobbit in all but size."</p><p></p><p>-- J.R.R. Tolkien</p></blockquote><h2>Blog posts</h2></div>"""
+        #print(actual_html)
+        self.assertEqual(actual_html, expected_html)
 
 
 if __name__ == "__main__":

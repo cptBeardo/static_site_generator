@@ -22,7 +22,8 @@ class SiteGenerator:
             md_content = md_file.read()
         with open(template_path, 'r') as template_file:
             template_content = template_file.read()
-        html_string = markdown_to_html_node(md_content).to_html()
+        html_node = markdown_to_html_node(md_content)
+        html_string = html_node.to_html()  # changed this right here, used to be part of html_node
         doc_title = extract_title(md_content)
         new_html_content = template_content.replace("{{ Title }}", doc_title)
         new_html_content = new_html_content.replace("{{ Content }}", html_string)

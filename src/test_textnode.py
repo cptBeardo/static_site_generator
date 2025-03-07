@@ -71,6 +71,7 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(html_node.props["src"], "https://example.com/image.jpg")
         self.assertIn("alt", html_node.props)
         self.assertEqual(html_node.props["alt"], "alt image text here")
+        #print(html_node)
 
     def test_text_node_link(self):
         node = TextNode("more random text", TextType.LINK, "https://example.com")

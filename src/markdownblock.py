@@ -34,7 +34,7 @@ def block_to_block_type(mdblock: str) -> BlockType:  # :str) -> BlockType is opt
 
     lines = mdblock.split("\n")
 
-    all_quote_lines = all(line.startswith('> ') for line in lines)
+    all_quote_lines = all(line.startswith('>') for line in lines)
     if all_quote_lines:
         return BlockType.QUOTE
     
