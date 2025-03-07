@@ -85,12 +85,12 @@ def wrap_quotes_block(text):
             line = line[1:]
             if line and line[0] == ' ':
                 line = line[1:]
-            quote_content.append(line)
+            quote_content.append(ParentNode('p', text_to_children(line), None))
     
-    content = "\n".join(quote_content)
-    children = text_to_children(content)
+    #content = "\n".join(quote_content)
+    #children = text_to_children(content)
 
-    return ParentNode('blockquote', children, None)
+    return ParentNode('blockquote', quote_content, None)
 
 
 def wrap_unordered_list_block(text):

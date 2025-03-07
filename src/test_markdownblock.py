@@ -112,8 +112,9 @@ class TestMarkdownToHTML(unittest.TestCase):
         markdown_input = """> This is a blockquote\n> It can span multiple lines\n> And can contain **formatting**"""
         html_node = markdown_to_html_node(markdown_input)
         actual_html = html_node.to_html()
-        expected_html = """<div><blockquote>This is a blockquote\nIt can span multiple lines\nAnd can contain <b>formatting</b></blockquote></div>"""
+        expected_html = """<div><blockquote><p>This is a blockquote</p><p>It can span multiple lines</p><p>And can contain <b>formatting</b></p></blockquote></div>"""
         self.assertEqual(actual_html, expected_html)
+        print(actual_html)
 
     def test_unordered_list(self):
         markdown_input = """* Item 1\n* Item 2 with **bold**\n* Item 3 with *italic*"""
@@ -133,8 +134,9 @@ class TestMarkdownToHTML(unittest.TestCase):
         markdown_input = """# Document Title\n\nThis is a paragraph with **bold** and *italic* text.\n\n## Section 1\n\n* List item 1\n* List item 2\n\n> Important quote here\n> With multiple lines"""
         html_node = markdown_to_html_node(markdown_input)
         actual_html = html_node.to_html()
-        expected_html = """<div><h1>Document Title</h1><p>This is a paragraph with <b>bold</b> and <i>italic</i> text.</p><h2>Section 1</h2><ul><li>List item 1</li><li>List item 2</li></ul><blockquote>Important quote here\nWith multiple lines</blockquote></div>"""
+        expected_html = """<div><h1>Document Title</h1><p>This is a paragraph with <b>bold</b> and <i>italic</i> text.</p><h2>Section 1</h2><ul><li>List item 1</li><li>List item 2</li></ul><blockquote><p>Important quote here</p><p>With multiple lines</p></blockquote></div>"""
         self.assertEqual(actual_html, expected_html)
+        print(actual_html)
 
 """44 tests completed"""
 class TestExtractTitle(unittest.TestCase):
