@@ -6,6 +6,7 @@ import shutil
 from htmlnode import *
 from textnode import *
 from splitnode import *
+from markdownblock import *
 from main import *
 
 # Sanity Check 1: Default attributes
@@ -88,16 +89,25 @@ from main import *
 # TESTING posixpath commands: static_image_directory = os.path.abspath("../static/images")
 # TESTING posixpath commands: print(os.listdir(static_image_directory))
 
-root_directory = os.path.abspath("./")
+#root_directory = os.path.abspath("./")
 #static_directory = os.path.join(root_directory, "static")
 #print(os.listdir(static_directory))
 
 #static_files = os.listdir(static_directory)
 #print(static_files)
 
-print(root_directory)
+#print(root_directory)
 
 
+markdown = """# Hello World\n\n1. You are awesome\n2. You have a cute butt\n3. Have a nice day\n\nIn all sincerity, I like you a lot!\n\n> "Do unto others. . . "\n> Smokey the Bear"""
+print(markdown)
+def extract_title(markdown):
+    h1_blocks = list(filter(lambda block: block.startswith("# "), markdown_to_blocks(markdown)))
+    if not h1_blocks:
+        raise Exception("No h1 header found in markdown")
+    return h1_blocks[0][2:].strip()
+
+extract_title(markdown)
 
 
         

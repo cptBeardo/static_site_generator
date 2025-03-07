@@ -1,20 +1,14 @@
 import unittest
 import re
 from markdownblock import markdown_to_blocks, block_to_block_type, BlockType, markdown_to_html_node
+from main import extract_title
 
 """27 tests complted"""
 class TestMarkdownBlock(unittest.TestCase):
 
     """Start tests for markdown_to_block()==========================================================================================="""
     def test_markdown_to_block(self):
-        md = """# This is a heading
-
-This is a paragraph of text. It has some **bold** and _italic_ words inside of it.
-
-- This is the first list item in a list block
-- This is a list item
-- This is another list item
-"""
+        md = """# This is a heading\n\nThis is a paragraph of text. It has some **bold** and _italic_ words inside of it.\n\n- This is the first list item in a list block\n- This is a list item\n- This is another list item\n"""
         blocks = markdown_to_blocks(md)
         self.assertEqual(
             blocks,
@@ -25,15 +19,7 @@ This is a paragraph of text. It has some **bold** and _italic_ words inside of i
         )
     
     def test_markdown_to_blocks(self):
-        md = """
-This is **bolded** paragraph
-
-This is another paragraph with _italic_ text and `code` here
-This is the same paragraph on a new line
-
-- This is a list
-- with items
-"""
+        md = """\nThis is **bolded** paragraph\n\nThis is another paragraph with _italic_ text and `code` here\nThis is the same paragraph on a new line\n\n- This is a list\n- with items\n"""
         blocks = markdown_to_blocks(md)
         self.assertEqual(
             blocks,
@@ -56,16 +42,12 @@ class TestBlockType(unittest.TestCase):
         self.assertEqual(block_to_block_type(block), BlockType.CODE)
 
     def test_block_to_block_type_ol(self):
-        block = """1. this is line one
-2. this is line three
-5. this is line three"""
+        block = """1. this is line one\n2. this is line three\n5. this is line three"""
         self.assertNotEqual(block_to_block_type(block), BlockType.ORDERED_LIST)
         self.assertEqual(block_to_block_type(block), BlockType.PARAGRAPH)
 
     def test_block_to_block_type_ul(self):
-        block = """- Africa
-- England
-- Paraguay"""
+        block = """- Africa\n- England\n- Paraguay"""
         self.assertEqual(block_to_block_type(block), BlockType.UNORDERED_LIST)
 
     def test_block_to_block_type_quote(self):
@@ -155,6 +137,33 @@ class TestMarkdownToHTML(unittest.TestCase):
         self.assertEqual(actual_html, expected_html)
 
 """44 tests completed"""
+class TestExtractTitle(unittest.TestCase):
+    def test_basic_title(self):
+        markdown = "# Hello, World!\n\nThis is a test."
+        self.assertEqual(extract_title(markdown), "Hello, World!")
+    
+    def test_title_with_leading_trailing_spaces(self):
+        markdown = "#    Spaces Galore    \n\nThis is a test."
+        self.assertEqual(extract_title(markdown), "Spaces Galore")
+
+    def test_no_title(self):
+        markdown = "This is a test with no title."
+        with self.assertRaises(Exception):
+            extract_title(markdown)
+
+    # DEBUGGING ExctractTitle def test_no_title_2(self):  --->  Cannot Use this, it is incorrect!
+    # DEBUGGING ExctractTitle     markdown = "This is a test with no title."
+    # DEBUGGING ExctractTitle     self.assertEqual(extract_title(markdown), "No h1 header found in markdown")
+
+    def test_multiple_titles(self):
+        markdown = "# First Title\n\n## Second Title\n\n# Another First Title"
+        self.assertEqual(extract_title(markdown), "First Title")
+
+    def test_full_markdown(self):
+        markdown = """# This is a heading\n\nThis is a paragraph with some text.\n\n## This is a subheading\n\n- This is a list item\n- Another list item\n\n> This is a blockquote"""
+        self.assertEqual(extract_title(markdown), "This is a heading")
+
+"""49 tests completed"""
 
 
 if __name__ == "__main__":

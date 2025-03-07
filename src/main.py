@@ -3,6 +3,7 @@ import os
 import posixpath
 import shutil
 from textnode import TextNode, TextType
+from markdownblock import markdown_to_blocks
 
 """navigate to ../public and run python3 -m http.server 8888"""
 
@@ -38,6 +39,11 @@ def copy_static(source, destination):
             copy_static(source_path, dest_path)
             print(f"Copied directory: {source_path} to {dest_path}")
 
+def extract_title(markdown):
+    h1_blocks = list(filter(lambda block: block.startswith("# "), markdown_to_blocks(markdown)))
+    if not h1_blocks:
+        raise Exception("No h1 header found in markdown")
+    return h1_blocks[0][2:].strip()
 
 """don't write functions below this main() function"""
 def main():
