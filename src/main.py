@@ -14,6 +14,7 @@ public_directory = os.path.join(root_directory,"public")
 static_directory = os.path.join(root_directory, "static")
 static_image_directory = os.path.join(static_directory, "images")
 
+
 def generate_page(from_path, template_path, dest_path):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     with open(from_path, 'r') as md_file:
@@ -22,6 +23,9 @@ def generate_page(from_path, template_path, dest_path):
         template_content = template_file.read()
     html_string = markdown_to_html_node(md_content).to_html()
     doc_title = extract_title(md_content)
+    new_html_content = template_content.replace("{{ Title }}", doc_title)
+    new_html_content = new_html_content.replace("{{ Content }}", html_string)
+    pass
 
 def create_dir(directory: str):
     target_directory = os.path.exists(directory)
@@ -47,6 +51,12 @@ def copy_static(source, destination):
             create_dir(dest_path)
             copy_static(source_path, dest_path)
             print(f"Copied directory: {source_path} to {dest_path}")
+
+def create_dest_path(directory, file_name):
+    dest_path = os.path.join(directory, filename)
+    create_dir(directory)
+    return dest_path
+
 
 def extract_title(markdown):
     h1_blocks = list(filter(lambda block: block.startswith("# "), markdown_to_blocks(markdown)))
