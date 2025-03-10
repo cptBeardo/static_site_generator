@@ -2,6 +2,7 @@ import re
 from textnode import TextNode, TextType
 from htmlnode import HTMLNode, LeafNode
 
+"""friendly text: enjoy your day"""
 def text_to_textnodes(text):
     nodes = [TextNode(text, TextType.TEXT)]
     nodes = split_nodes_image(nodes)
