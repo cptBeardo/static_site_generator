@@ -23,8 +23,15 @@ class SiteGenerator:
             dest_entry_path = os.path.join(dest_dir_path, entry)
             if os.path.isfile(entry_path):
                 print(f"File found: {entry_path}")
-            elif: os.path.isdir(entry_path):
+                if entry_path.endswith('.md'):
+                    print(f"Markdown file found: {entry_path}")
+                    dest_html_path = dest_entry_path.replace(".md", ".html")
+                    self.generate_page(entry_path, template_path, dest_html_path)
+
+            elif os.path.isdir(entry_path):
                 print(f"Directory found: {entry_path}")
+                create_dir(dest_entry_path)
+                self.generate_pages_recursive(entry_path, template_path, dest_entry_path)
 
     def generate_page(self, from_path, template_path, dest_path):
         print(f"Generating page from {from_path} to {dest_path} using {template_path}")
@@ -82,7 +89,7 @@ def extract_title(markdown):
     return h1_blocks[0][2:].strip()
 
 """don't write functions below this main() function"""
-def main(from_path, template_path, dest_path):
+def main():
 
     empty_dir(public_directory)
 
@@ -90,14 +97,11 @@ def main(from_path, template_path, dest_path):
 
     site_generator = SiteGenerator(public_directory)
 
-    site_generator.generate_page(
-        os.path.join(root_directory, from_path),
-        os.path.join(root_directory, template_path),
-        os.path.join(root_directory, dest_path)
-    )
+    content_directory = os.path.join(root_directory, "content")
+    template_path = os.path.join(root_directory, "template.html")
+
+    site_generator.generate_pages_recursive(content_directory, template_path, public_directory)
  
 if __name__ == "__main__":
-    from_path = "content/index.md"
-    template_path = "template.html"
-    dest_path = "public/index.html"
-    main(from_path, template_path, dest_path)
+    
+    main()
