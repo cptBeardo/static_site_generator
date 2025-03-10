@@ -75,7 +75,6 @@ def markdown_to_html_node(markdown):
 
     return ParentNode('div', html_blocks, None)
 
-
 def wrap_quotes_block(text):
     lines = text.split("\n")
     quote_content = []
@@ -99,16 +98,13 @@ def wrap_quotes_block(text):
 
     return ParentNode('blockquote', children, None) # change "children" back to "quote_content" if using correct and back if not
 
-
 def wrap_unordered_list_block(text):
     children = wrap_list_items(text)
     return ParentNode("ul", children, None)
 
-
 def wrap_ordered_list_block(text):
     children = wrap_list_items(text)
     return ParentNode("ol", children, None)
-
 
 def wrap_list_items(text):
     lines = text.split("\n")
@@ -128,7 +124,6 @@ def wrap_list_items(text):
         
     return list_item_nodes
 
-
 def wrap_code_block(text):  # IMPORTANT: DON'T process inline markdown for code blocks!!!!
     if text.startswith("```") and text.endswith("```"): # this if block removes the leading and trailing "```" and accounts for multiple lines of code
         text = text[3:-3].strip()
@@ -138,7 +133,6 @@ def wrap_code_block(text):  # IMPORTANT: DON'T process inline markdown for code 
     code_parent = ParentNode('code', [code_node], None)
     pre_parent = ParentNode('pre', [code_parent], None)
     return pre_parent
-
 
 def wrap_heading_block(text):  # all good, don't touch
     level = 0
@@ -152,7 +146,6 @@ def wrap_heading_block(text):  # all good, don't touch
     content = text[level:].lstrip()
     children = text_to_children(content)
     return ParentNode(f"h{level}", children, None)
-
 
 def wrap_paragraph_block(text): # all good, don't touch
     children = text_to_children(text)
