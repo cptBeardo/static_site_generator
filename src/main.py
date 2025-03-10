@@ -16,6 +16,16 @@ class SiteGenerator:
     def __init__(self, output_directory):
         self.output_directory = output_directory
 
+    def generate_pages_recursive(self, dir_path_content, template_path, dest_dir_path):
+        entries = os.listdir(dir_path_content)
+        for entry in entries:
+            entry_path = os.path.join(dir_path_content, entry)
+            dest_entry_path = os.path.join(dest_dir_path, entry)
+            if os.path.isfile(entry_path):
+                print(f"File found: {entry_path}")
+            elif: os.path.isdir(entry_path):
+                print(f"Directory found: {entry_path}")
+
     def generate_page(self, from_path, template_path, dest_path):
         print(f"Generating page from {from_path} to {dest_path} using {template_path}")
         with open(from_path, 'r') as md_file:
