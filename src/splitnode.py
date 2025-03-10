@@ -39,7 +39,13 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
         after_text = text[end_index + len(delimiter):]
         if after_text:
-            new_nodes.append(TextNode(after_text, TextType.TEXT))  
+            if delimiter in after_text:  #<----This is what I was trying to find all along!
+                temp_nodes = [TextNode(after_text, TextType.TEXT)]
+                processed_nodes = split_nodes_delimiter(temp_nodes, delimiter, text_type)
+                new_nodes.extend(processed_nodes)
+            else:
+                new_nodes.append(TextNode(after_text, TextType.TEXT))  
+
     return new_nodes
 
 def split_nodes_image(old_nodes):
