@@ -81,22 +81,22 @@ def wrap_quotes_block(text):
     
     for line in lines:
         """correct, but won't pass test"""
-    #    if line.startswith(">"):
-    #        line = line[1:]
-    #        if line and line[0] == ' ':
-    #            line = line[1:]
-    #        quote_content.append(ParentNode('p', text_to_children(line), None))
+        if line.startswith(">"):
+            line = line[1:]
+            if line and line[0] == ' ':
+                line = line[1:]
+            quote_content.append(ParentNode('p', text_to_children(line), None))
 
-    #return ParentNode('blockquote', quote_content, None)
+    return ParentNode('blockquote', quote_content, None)
 
         """incorrect, but used to pass test"""
-        if not line.startswith(">"):
-            raise ValueError("invalid quote block")
-        quote_content.append(line.lstrip(">").strip())    
-    content = "\n".join(quote_content)
-    children = text_to_children(content)
+    #    if not line.startswith(">"):
+    #        raise ValueError("invalid quote block")
+    #    quote_content.append(line.lstrip(">").strip())    
+    #content = "\n".join(quote_content)
+    #children = text_to_children(content)
 
-    return ParentNode('blockquote', children, None) # change "children" back to "quote_content" if using correct and back if not
+    #return ParentNode('blockquote', children, None) # change "children" back to "quote_content" if using correct and back if not
 
 def wrap_unordered_list_block(text):
     children = wrap_list_items(text)
