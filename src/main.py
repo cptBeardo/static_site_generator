@@ -1,9 +1,15 @@
 import os
+import sys
 import shutil
 from textnode import TextNode, TextType
 from markdownblock import markdown_to_blocks, markdown_to_html_node
 
 """navigate to ../public and run python3 -m http.server 8888"""
+
+basepath = "/"
+if len(sys.argv) > 1:
+    basepath = sys.argv[1]
+
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 root_directory = os.path.dirname(script_dir)
@@ -16,7 +22,7 @@ class SiteGenerator:
     def __init__(self, output_directory):
         self.output_directory = output_directory
 
-    def generate_pages_recursive(self, dir_path_content, template_path, dest_dir_path):
+    def generate_pages_recursive(self, dir_path_content, template_path, dest_dir_path, basepath):
         entries = os.listdir(dir_path_content)
         for entry in entries:
             entry_path = os.path.join(dir_path_content, entry)
@@ -26,14 +32,14 @@ class SiteGenerator:
                 if entry_path.endswith('.md'):
                     print(f"Markdown file found: {entry_path}")
                     dest_html_path = dest_entry_path.replace(".md", ".html")
-                    self.generate_page(entry_path, template_path, dest_html_path)
+                    self.generate_page(entry_path, template_path, dest_html_path, basepath)
 
             elif os.path.isdir(entry_path):
                 print(f"Directory found: {entry_path}")
                 create_dir(dest_entry_path)
-                self.generate_pages_recursive(entry_path, template_path, dest_entry_path)
+                self.generate_pages_recursive(entry_path, template_path, dest_entry_path, basepath)
 
-    def generate_page(self, from_path, template_path, dest_path):
+    def generate_page(self, from_path, template_path, dest_path, basepath):
         print(f"Generating page from {from_path} to {dest_path} using {template_path}")
         with open(from_path, 'r') as md_file:
             md_content = md_file.read()
@@ -44,6 +50,8 @@ class SiteGenerator:
         doc_title = extract_title(md_content)
         new_html_content = template_content.replace("{{ Title }}", doc_title)
         new_html_content = new_html_content.replace("{{ Content }}", html_string)
+        new_html_content = new_html_content.replace('href="/', f'href="{basepath}')
+        new_html_content = new_html_content.replace('src="/', f'src="{basepath}')
         with open(dest_path, 'w') as dest_file:
             dest_file.write(new_html_content)
         with open(dest_path, 'r') as dest_file:
@@ -100,7 +108,7 @@ def main():
     content_directory = os.path.join(root_directory, "content")
     template_path = os.path.join(root_directory, "template.html")
 
-    site_generator.generate_pages_recursive(content_directory, template_path, public_directory)
+    site_generator.generate_pages_recursive(content_directory, template_path, public_directory, basepath)
  
 if __name__ == "__main__":
     
