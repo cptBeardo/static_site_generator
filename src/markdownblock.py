@@ -89,7 +89,7 @@ def wrap_quotes_block(text):
 
     return ParentNode('blockquote', quote_content, None)
 
-        """incorrect, but used to pass test"""
+    """incorrect, but used to pass test"""
     #    if not line.startswith(">"):
     #        raise ValueError("invalid quote block")
     #    quote_content.append(line.lstrip(">").strip())    
