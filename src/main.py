@@ -4,7 +4,7 @@ import shutil
 from textnode import TextNode, TextType
 from markdownblock import markdown_to_blocks, markdown_to_html_node
 
-"""navigate to ../public and run python3 -m http.server 8888"""
+"""navigate to ../docs and run python3 -m http.server 8888"""
 
 basepath = "/"
 if len(sys.argv) > 1:
@@ -14,7 +14,7 @@ if len(sys.argv) > 1:
 script_dir = os.path.dirname(os.path.abspath(__file__))
 root_directory = os.path.dirname(script_dir)
 #root_directory = os.path.abspath("./")
-public_directory = os.path.join(root_directory,"public")
+docs_directory = os.path.join(root_directory,"docs")
 static_directory = os.path.join(root_directory, "static")
 static_image_directory = os.path.join(static_directory, "images")
 
@@ -99,16 +99,16 @@ def extract_title(markdown):
 """don't write functions below this main() function"""
 def main():
 
-    empty_dir(public_directory)
+    empty_dir(docs_directory)
 
-    copy_static(static_directory, public_directory)
+    copy_static(static_directory, docs_directory)
 
-    site_generator = SiteGenerator(public_directory)
+    site_generator = SiteGenerator(docs_directory)
 
     content_directory = os.path.join(root_directory, "content")
     template_path = os.path.join(root_directory, "template.html")
 
-    site_generator.generate_pages_recursive(content_directory, template_path, public_directory, basepath)
+    site_generator.generate_pages_recursive(content_directory, template_path, docs_directory, basepath)
  
 if __name__ == "__main__":
     

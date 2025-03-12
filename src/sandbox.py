@@ -77,8 +77,8 @@ from main import *
 # TESTING posixpath commands: print(os.path.abspath("sandbox.py"))
 # TESTING posixpath commands: print(os.path.basename("/home/cmsager/workspace/github.com/cptBeardo/static_site_generator/src/sandbox.py"))
 # TESTING posixpath commands: print(os.path.abspath("sandbox.py")) # returns full path of file or directory"""
-# TESTING posixpath commands: print(os.path.exists("/public/"))
-# TESTING posixpath commands: print(os.path.exists("../public/")) # USE THIS ONE
+# TESTING posixpath commands: print(os.path.exists("/doc/"))
+# TESTING posixpath commands: print(os.path.exists("../doc/")) # USE THIS ONE
 # TESTING posixpath commands: print(os.path.abspath(".")) # USE THIS ONE => Returns the full parent directory path to current file (does NOT return current file itself)
 # TESTING posixpath commands: current_directory = os.path.abspath(".")
 # TESTING posixpath commands: print(os.path.splitroot(current_directory))
